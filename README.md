@@ -1,5 +1,3 @@
-# R_qgis_projet_couche
-
 # Script R : qgis_projet_couche
 
 Ce script permet de lister les projets QGIS avec l'extension QGZ utilisant une couche spécifique.
