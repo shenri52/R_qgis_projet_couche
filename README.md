@@ -20,9 +20,5 @@ Ce script permet de lister les projets QGIS avec l'extension QGZ utilisant une c
 3. Saisir le nom de la couche faisant l'objet de la recherche
 
 ## Résultat
-
-Le fichier contenant la liste des couches se trouve dans le dossier "result" et se nomme "liste_projet".
-
-Si un fichier "liste_projet est déjà existant le dossier "résult", l'export sera nommé "liste_projet2".
-Cela permet d'optimiser la recherche si celle-ci se concentre sur 2 dossiers ne faisant pas partie de la même arborescence. 
-Cette possibilité n'ayant pas été programmé, elle nécessite de lancer le script 2 fois.
+;
+Le fichier contenant la liste des couches se trouve dans le dossier "result" et sera nommé en fonction du nom que vous avez saisi.
