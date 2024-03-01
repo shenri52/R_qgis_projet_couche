@@ -22,7 +22,7 @@
 
 #################### chargement des librairies
 
-source("./script/librairie.R")
+source("script/librairie.R")
 
 #################### Suppression des fichiers gitkeep
 
@@ -30,8 +30,8 @@ source("script/suppression_gitkeep.R")
 
 #################### Lister les projets GQZ dans une arborescence
 
-source("./script/lister_qgz.R")
+source("script/lister_qgz.R")
 
 #################### Liste des couches contenues dans les projets QGS
 
-source("./script/lister_projet.R")
+source("script/lister_projet.R")

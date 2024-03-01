@@ -1,19 +1,5 @@
 #################### Liste des couches contenues dans les projets QGS
 
-# Récupérer la liste des fichiers QGS décompressés
-list_qgs <- list.files(path = "result/",
-                       pattern = ".qgs",
-                       full.names = TRUE,
-                       recursive = TRUE) %>%
-                       as.data.frame() %>%
-            rename.variable(".", "Chemin")
-
-# Boucle de listing des projets couches contenues dans les projets QGS
-nb_qgs <- count(list_qgs)
-
-# Initialisation dataframe
-liste_projet <- data.frame(PROJET = character())
-
 # Recherche de la couche
 recherche <- NULL
 
@@ -22,13 +8,32 @@ while (is_empty(recherche))
   recherche <- dlgInput("Saisir le nom de la couche à rechercher", default = "")$res  
 }
 
-for (i in 1: nb_qgs$n)
+# Dossier de recherche pour personnaliser le nom
+nom_dossier <- NULL
+
+while (is_empty(nom_dossier))
+{
+  nom_dossier <- dlgInput("Nom du dossier pour personnaliserle nom du fichier", default = "")$res  
+}
+
+# Initialisation liste
+num_liste <- 1
+liste_projet <- data.frame(PROJET = character())
+
+# Décompression et vérification du contenu
+for (i in 1: nrow(list_qgz))
 {
   # Fichiers QGZ à décompresser
-  projet_qgs <- list_qgs$Chemin[i]
+  zip_fichier <- list_qgz$Chemin[i]
   
-  # Parcours des projets à la recherche de la couche
-  couche_sig <- read_html(projet_qgs) %>%
+  # Création d'une liste du fichiers QGS contenu dans les fichiers QGZ à décompresser
+  zip_qgs <- grep('\\.qgs$', unzip(zip_fichier, list=TRUE)$Name, ignore.case=TRUE, value=TRUE)
+  
+  # Décompression du QGS contenu dans les QGZ
+  unzip(zip_fichier, files=zip_qgs, exdir = "result/")
+
+  # Parcours du QGS à la recherche de la couche
+  couche_sig <- read_html(paste("result/", zip_qgs, sep ="")) %>%
                 html_nodes("layer-tree-layer") %>%
                 html_attr("source") %>%
                 as.data.frame() %>%
@@ -36,33 +41,24 @@ for (i in 1: nb_qgs$n)
                 unique(.) %>%
                 rename.variable(".", "couche") %>%
                 filter(grepl(recherche, couche, fixed = TRUE))
-
-  if (nrow(couche_sig) == 1)
-  {
+  
   # Liste des projets utilisant la couche
-  liste_projet[i, ] <- list_qgz %>%
-                       filter(grepl(str_sub(projet_qgs, 8, nchar(projet_qgs)-4), Chemin, fixed = TRUE))
+  if (nrow(couche_sig) > 0)
+  {
+  liste_projet[num_liste, ] <- zip_fichier
+  num_liste <- num_liste+1
   }
   
   # Suppression du fichier QGS traité
-  file.remove(list_qgs$Chemin[i])
+  file.remove(paste("result/", zip_qgs, sep =""))
+  
 }
 
 # Export des données
-if(file.exists("result/liste_projet.csv") == TRUE)
-{
-  # Sauvegarde sous un autre nom si les programmes et lancé 2 fois pour optimiser la recherche
-  # Le fichier contiendra la liste des projets du dossier 2
-  write.table(liste_projet,
-              file = "result/liste_projet2.csv",
-              fileEncoding = "UTF-8",
-              sep =";",
-              row.names = FALSE)
-} else
-{
-  write.table(liste_projet,
-              file = "result/liste_projet.csv",
-              fileEncoding = "UTF-8",
-              sep =";",
-              row.names = FALSE)
-}
+write.table(liste_projet,
+            file = paste("result/",
+                         paste(nom_dossier, ".csv", sep =""),
+                         sep = ""),
+            fileEncoding = "UTF-8",
+            sep =";",
+            row.names = FALSE)
