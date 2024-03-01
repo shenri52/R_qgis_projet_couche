@@ -18,6 +18,7 @@ Ce script permet de lister les projets QGIS avec l'extension QGZ utilisant une c
 1. Lancer le script intitulé "prog_projet_couche" qui se trouve dans le dossier "script"
 2. Indiquer le dossier contenant les fichiers QGZ
 3. Saisir le nom de la couche faisant l'objet de la recherche
+4. Saisir le nom du fichier résultat
 
 ## Résultat
 ;
