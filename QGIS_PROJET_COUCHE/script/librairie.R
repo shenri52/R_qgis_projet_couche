@@ -4,7 +4,6 @@ library(tidyverse)
 
 # Lecture de fichiers html
 library(xml2)
-library(rvest)
 
 # Manipulation des variables
 library(questionr)
